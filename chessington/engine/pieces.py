@@ -37,6 +37,16 @@ class Piece(ABC):
             return True
         return False
 
+    def is_enemy(self, square, board):
+        if board.get_piece(square) != None and board.get_piece(square).player != self.player:
+            return True
+        return False
+
+    def can_move(self, sq, board):
+        if self.inside_board(sq, board) and (board.get_piece(sq) == None or self.is_enemy(sq, board)):
+            return True
+        return False
+
 class Pawn(Piece):
     """
     A class representing a chess pawn.
@@ -44,13 +54,21 @@ class Pawn(Piece):
 
     def get_available_moves(self, board):
         current_square = board.find_piece(self)
+        row = current_square.row
+        col = current_square.col
         available_moves = []
-        direction = 1 if self.player == Player.WHITE else -1
-        sq = Square.at(current_square.row + direction, current_square.col)
+        row_dir = 1 if self.player == Player.WHITE else -1
+        sq = Square.at(row + row_dir, col)
         if self.inside_board(sq, board) and board.get_piece(sq) == None:
             available_moves.append(sq)
+            sq = Square.at(row + row_dir, col + 1)
+            if self.inside_board(sq, board) and self.is_enemy(sq, board):
+                available_moves.append(sq)
+            sq = Square.at(row + row_dir, col - 1)
+            if self.inside_board(sq, board) and self.is_enemy(sq, board):
+                available_moves.append(sq)
             if self.has_moved == False:
-                sq = Square.at(current_square.row + 2*direction, current_square.col)
+                sq = Square.at(row + 2 * row_dir, col)
                 if self.inside_board(sq, board) and board.get_piece(sq) == None:
                     available_moves.append(sq)
         return available_moves
@@ -98,4 +116,14 @@ class King(Piece):
     """
 
     def get_available_moves(self, board):
-        return []
+        current_square = board.find_piece(self)
+        row = current_square.row
+        col = current_square.col
+        available_moves = []
+        change = [-1,0,1]
+        for row_change in change:
+            for col_change in change:
+                sq = Square.at(row + row_change, col + col_change)
+                if self.can_move(sq, board):
+                    available_moves.append(sq)
+        return available_moves

@@ -1,6 +1,6 @@
 from chessington.engine.board import Board
 from chessington.engine.data import Player, Square
-from chessington.engine.pieces import Pawn
+from chessington.engine.pieces import Pawn, King
 
 class TestPawns:
 
@@ -331,3 +331,72 @@ class TestPawns:
         # Assert
         assert Square.at(2, 3) not in moves
         assert Square.at(2, 5) not in moves
+
+class TestKings:
+
+    @staticmethod
+    def test_white_kings_can_move_to_all_neighbouring_squares():
+
+        # Arrange
+        board = Board.empty()
+        king = King(Player.WHITE)
+        square = Square.at(1, 4)
+        board.set_piece(square, king)
+
+        # Act
+        moves = king.get_available_moves(board)
+
+        # Assert
+        assert set(moves) == set([
+            Square.at(1,5),
+            Square.at(1,3),
+            Square.at(2,5),
+            Square.at(2,3),
+            Square.at(2,4),
+            Square.at(0,5),
+            Square.at(0,3),
+            Square.at(0,4)
+        ])
+
+    @staticmethod
+    def test_white_kings_can_move_to_all_neighbouring_squares_inside_board():
+
+        # Arrange
+        board = Board.empty()
+        king = King(Player.WHITE)
+        square = Square.at(7, 0)
+        board.set_piece(square, king)
+
+        # Act
+        moves = king.get_available_moves(board)
+
+        # Assert
+        assert set(moves) == set([
+            Square.at(6,0),
+            Square.at(6,1),
+            Square.at(7,1)
+        ])
+
+    @staticmethod
+    def test_white_kings_can_move_to_unoccupied_neighbouring_squares_inside_board():
+
+        # Arrange
+        board = Board.empty()
+        king = King(Player.WHITE)
+        square = Square.at(7, 0)
+        board.set_piece(square, king)
+        enemy1 = Pawn(Player.BLACK)
+        enemy1_square = Square.at(6, 0)
+        board.set_piece(enemy1_square, enemy1)
+        enemy2 = Pawn(Player.WHITE)
+        enemy2_square = Square.at(6, 1)
+        board.set_piece(enemy2_square, enemy2)
+
+        # Act
+        moves = king.get_available_moves(board)
+
+        # Assert
+        assert set(moves) == set([
+            Square.at(6,0),
+            Square.at(7,1)
+        ])
