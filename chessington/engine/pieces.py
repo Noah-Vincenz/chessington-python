@@ -3,7 +3,6 @@ Definitions of each of the different chess pieces.
 """
 
 from abc import ABC, abstractmethod
-
 from chessington.engine.data import Player, Square
 
 class Piece(ABC):
@@ -29,7 +28,14 @@ class Piece(ABC):
         current_square = board.find_piece(self)
         board.move_piece(current_square, new_square)
         self.has_moved = True
-        
+
+    def inside_board(self, square, board):
+        col = square.col
+        row = square.row
+        size = board.board_size
+        if row < size and row >= 0 and col < size and col >= 0:
+            return True
+        return False
 
 class Pawn(Piece):
     """
@@ -41,11 +47,11 @@ class Pawn(Piece):
         available_moves = []
         direction = 1 if self.player == Player.WHITE else -1
         sq = Square.at(current_square.row + direction, current_square.col)
-        if board.get_piece(sq) == None:
+        if self.inside_board(sq, board) and board.get_piece(sq) == None:
             available_moves.append(sq)
             if self.has_moved == False:
                 sq = Square.at(current_square.row + 2*direction, current_square.col)
-                if board.get_piece(sq) == None:
+                if self.inside_board(sq, board) and board.get_piece(sq) == None:
                     available_moves.append(sq)
         return available_moves
 
