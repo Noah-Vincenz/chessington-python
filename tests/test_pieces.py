@@ -1,6 +1,6 @@
 from chessington.engine.board import Board
 from chessington.engine.data import Player, Square
-from chessington.engine.pieces import Pawn, King
+from chessington.engine.pieces import Pawn, King, Knight
 
 class TestPawns:
 
@@ -399,4 +399,56 @@ class TestKings:
         assert set(moves) == set([
             Square.at(6,0),
             Square.at(7,1)
+        ])
+
+
+class TestKnights:
+
+    @staticmethod
+    def test_white_knights_can_move_to_all_possible_squares():
+
+        # Arrange
+        board = Board.empty()
+        knight = Knight(Player.WHITE)
+        square = Square.at(1, 4)
+        board.set_piece(square, knight)
+
+        # Act
+        moves = knight.get_available_moves(board)
+
+        # Assert
+        assert set(moves) == set([
+            Square.at(0, 6),
+            Square.at(0, 2),
+            Square.at(2, 6),
+            Square.at(2, 2),
+            Square.at(3, 3),
+            Square.at(3, 5)
+        ])
+    
+    @staticmethod
+    def test_white_knights_can_move_to_all_unoccupied_squares():
+
+        # Arrange
+        board = Board.empty()
+        knight = Knight(Player.WHITE)
+        square = Square.at(1, 4)
+        board.set_piece(square, knight)
+        enemy1 = Pawn(Player.BLACK)
+        enemy1_square = Square.at(0, 6)
+        board.set_piece(enemy1_square, enemy1)
+        enemy2 = Pawn(Player.WHITE)
+        enemy2_square = Square.at(2, 6)
+        board.set_piece(enemy2_square, enemy2)
+
+        # Act
+        moves = knight.get_available_moves(board)
+
+        # Assert
+        assert set(moves) == set([
+            Square.at(0, 6),
+            Square.at(0, 2),
+            Square.at(2, 2),
+            Square.at(3, 3),
+            Square.at(3, 5)
         ])

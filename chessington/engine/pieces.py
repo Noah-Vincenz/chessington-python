@@ -80,7 +80,21 @@ class Knight(Piece):
     """
 
     def get_available_moves(self, board):
-        return []
+        current_square = board.find_piece(self)
+        row = current_square.row
+        col = current_square.col
+        available_moves = []
+        x = [-2, -2, -1, -1, 1, 1, 2, 2]
+        y = [1, -1, 2, -2, 2, -2, -1, 1]
+        i = 0
+        while i < len(x):
+            new_row = row + x[i]
+            new_col = col + y[i]
+            sq = Square.at(new_row, new_col)
+            if self.can_move(sq, board):
+                available_moves.append(sq)
+            i = i + 1
+        return available_moves
 
 
 class Bishop(Piece):
