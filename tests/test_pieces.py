@@ -1,6 +1,6 @@
 from chessington.engine.board import Board
 from chessington.engine.data import Player, Square
-from chessington.engine.pieces import Pawn, King, Knight
+from chessington.engine.pieces import Pawn, King, Knight, Queen, Rook, Bishop
 
 class TestPawns:
 
@@ -451,4 +451,83 @@ class TestKnights:
             Square.at(2, 2),
             Square.at(3, 3),
             Square.at(3, 5)
+        ])
+
+class TestQueens:
+
+    @staticmethod
+    def test_white_queens_can_move_to_all_possible_squares():
+
+        # Arrange
+        board = Board.empty()
+        queen = Queen(Player.WHITE)
+        square = Square.at(1, 4)
+        board.set_piece(square, queen)
+
+        # Act
+        moves = queen.get_available_moves(board)
+
+        # Assert
+        assert set(moves) == set([
+            Square.at(0, 3),
+            Square.at(0, 4),
+            Square.at(0, 5),
+            Square.at(1, 0),
+            Square.at(1, 1),
+            Square.at(1, 2),
+            Square.at(1, 3),
+            Square.at(1, 5),
+            Square.at(1, 6),
+            Square.at(1, 7),
+            Square.at(2, 3),
+            Square.at(2, 4),
+            Square.at(2, 5),
+            Square.at(3, 2),
+            Square.at(3, 4),       
+            Square.at(3, 6),
+            Square.at(4, 1),
+            Square.at(4, 4),
+            Square.at(4, 7),
+            Square.at(5, 0),
+            Square.at(5, 4),
+            Square.at(6, 4),
+            Square.at(7, 4)
+        ])
+
+    @staticmethod
+    def test_white_queens_can_move_to_all_unoccupied_squares():
+
+        # Arrange
+        board = Board.empty()
+        queen = Queen(Player.WHITE)
+        square = Square.at(1, 4)
+        board.set_piece(square, queen)
+        team1 = Pawn(Player.WHITE)
+        team1_square = Square.at(2, 5)
+        board.set_piece(team1_square, team1)
+        enemy1 = Pawn(Player.BLACK)
+        enemy1_square = Square.at(3, 4)
+        board.set_piece(enemy1_square, enemy1)
+
+        # Act
+        moves = queen.get_available_moves(board)
+
+        # Assert
+        assert set(moves) == set([
+            Square.at(0, 3),
+            Square.at(0, 4),
+            Square.at(0, 5),
+            Square.at(1, 0),
+            Square.at(1, 1),
+            Square.at(1, 2),
+            Square.at(1, 3),
+            Square.at(1, 5),
+            Square.at(1, 6),
+            Square.at(1, 7),
+            Square.at(2, 3),
+            Square.at(2, 4),
+            Square.at(3, 2),
+            Square.at(3, 4),       
+            Square.at(4, 1),
+            Square.at(5, 0)
         ])

@@ -121,7 +121,99 @@ class Queen(Piece):
     """
 
     def get_available_moves(self, board):
-        return []
+        current_square = board.find_piece(self)
+        row = current_square.row
+        col = current_square.col
+        available_moves = []
+        i = row + 1
+        while i < board.board_size:
+            sq = Square.at(i, col)
+            if board.get_piece(sq) == None:
+                available_moves.append(sq)
+                i += 1
+            else:
+                if self.is_enemy(sq, board):
+                    available_moves.append(sq)
+                break
+        i = row - 1
+        while i >= 0:
+            sq = Square.at(i, col)
+            if board.get_piece(sq) == None:
+                available_moves.append(sq)
+                i -= 1
+            else:
+                if self.is_enemy(sq, board):
+                    available_moves.append(sq)
+                break
+        j = col + 1
+        while j < board.board_size:
+            sq = Square.at(row, j)
+            if board.get_piece(sq) == None:
+                available_moves.append(sq)
+                j += 1
+            else:
+                if self.is_enemy(sq, board):
+                    available_moves.append(sq)
+                break
+        j = col - 1
+        while j >= 0:
+            sq = Square.at(row, j)
+            if board.get_piece(sq) == None:
+                available_moves.append(sq)
+                j -= 1
+            else:
+                if self.is_enemy(sq, board):
+                    available_moves.append(sq)
+                break
+        i = row + 1
+        j = col + 1
+        while i < board.board_size and j < board.board_size:
+            sq = Square.at(i, j)
+            if board.get_piece(sq) == None:
+                available_moves.append(sq)
+                i += 1
+                j += 1
+            else:
+                if self.is_enemy(sq, board):
+                    available_moves.append(sq)
+                break
+        i = row + 1
+        j = col - 1
+        while i < board.board_size and j >= 0:
+            sq = Square.at(i, j)
+            if board.get_piece(sq) == None:
+                available_moves.append(sq)
+                i += 1
+                j -= 1
+            else:
+                if self.is_enemy(sq, board):
+                    available_moves.append(sq)
+                break
+        i = row - 1
+        j = col + 1
+        while i >= 0 and j < board.board_size:
+            sq = Square.at(i, j)
+            if board.get_piece(sq) == None:
+                available_moves.append(sq)
+                i -= 1
+                j += 1
+            else:
+                if self.is_enemy(sq, board):
+                    available_moves.append(sq)
+                break
+        i = row - 1
+        j = col - 1
+        while i >= 0 and j >= 0:
+            sq = Square.at(i, j)
+            if board.get_piece(sq) == None:
+                available_moves.append(sq)
+                i -= 1
+                j -= 1
+            else:
+                if self.is_enemy(sq, board):
+                    available_moves.append(sq)
+                break
+        return available_moves
 
 
 class King(Piece):
