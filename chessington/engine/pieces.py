@@ -86,14 +86,10 @@ class Knight(Piece):
         available_moves = []
         x = [-2, -2, -1, -1, 1, 1, 2, 2]
         y = [1, -1, 2, -2, 2, -2, -1, 1]
-        i = 0
-        while i < len(x):
-            new_row = row + x[i]
-            new_col = col + y[i]
-            sq = Square.at(new_row, new_col)
+        for i in range(0, len(x)):
+            sq = Square.at(row + x[i], col + y[i])
             if self.can_move(sq, board):
                 available_moves.append(sq)
-            i = i + 1
         return available_moves
 
 
@@ -125,12 +121,10 @@ class Queen(Piece):
         row = current_square.row
         col = current_square.col
         available_moves = []
-        i = row + 1
-        while i < board.board_size:
+        for i in range(row + 1, board.board_size):
             sq = Square.at(i, col)
             if board.get_piece(sq) == None:
                 available_moves.append(sq)
-                i += 1
             else:
                 if self.is_enemy(sq, board):
                     available_moves.append(sq)
@@ -145,12 +139,10 @@ class Queen(Piece):
                 if self.is_enemy(sq, board):
                     available_moves.append(sq)
                 break
-        j = col + 1
-        while j < board.board_size:
+        for j in range(col + 1, board.board_size):
             sq = Square.at(row, j)
             if board.get_piece(sq) == None:
                 available_moves.append(sq)
-                j += 1
             else:
                 if self.is_enemy(sq, board):
                     available_moves.append(sq)
